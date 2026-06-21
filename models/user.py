@@ -1,9 +1,7 @@
 from sqlalchemy import String
-from sqlalchemy.orm import Mapped, mapped_column, DeclarativeBase
+from sqlalchemy.orm import Mapped, mapped_column
 import enum
-
-class Base(DeclarativeBase):
-    pass
+from base import Base
 
 class UserRole(enum.Enum):
     customer = "customer"

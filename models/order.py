@@ -1,9 +1,7 @@
-from sqlalchemy import String, Date, ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column, DeclarativeBase
+from sqlalchemy import Date, ForeignKey
+from sqlalchemy.orm import Mapped, mapped_column
 from datetime import date
-
-class Base(DeclarativeBase):
-    pass
+from base import Base
 
 class OrderItem(Base):
     __tablename__ = "order_items"
@@ -18,5 +16,9 @@ class Order(Base):
     __tablename__ = "orders"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    customer_id: Mapped[int] = mapped_column(ForeignKey("customers.id"))
+    order_date: Mapped[date] = mapped_column(Date)
+    customer_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+
+    def __repr__(self):
+        return f"ID:{self.id}, DATE:{self.order_date}, ORDERED BY:{self.customer_id}"
     

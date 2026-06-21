@@ -1,9 +1,7 @@
 from sqlalchemy import String, Numeric, ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column, DeclarativeBase
+from sqlalchemy.orm import Mapped, mapped_column
 from decimal import Decimal
-
-class Base(DeclarativeBase):
-    pass
+from base import Base
 
 class Product(Base):
     __tablename__ = "products"
@@ -14,3 +12,6 @@ class Product(Base):
     price: Mapped[Decimal] = mapped_column(Numeric(10,2))
     quantity: Mapped[int] = mapped_column()
     seller_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+
+    def __repr__(self):
+        return f"ID:{self.id}, NAME:{self.name}, DESCRIPTION:{self.description}, PRICE:{self.price}, LEFT:{self.quantity}, SELLER:{self.seller_id}"
