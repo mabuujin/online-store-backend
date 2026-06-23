@@ -1,9 +1,9 @@
-from sqlalchemy import String
+from sqlalchemy import String, Enum
 from sqlalchemy.orm import Mapped, mapped_column
 import enum
 from .base import Base
 
-class UserRole(enum.Enum):
+class UserRole(str, enum.Enum):
     customer = "customer"
     seller = "seller"
     admin = "admin"

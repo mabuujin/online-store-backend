@@ -1,1 +1,1 @@
-from auth import get_access_token, authenticate_user
+from .auth import get_access_token, authenticate_user

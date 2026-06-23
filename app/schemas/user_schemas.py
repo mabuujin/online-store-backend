@@ -1,11 +1,11 @@
 from pydantic import BaseModel
-from models import UserRole
+from app.models import UserRole
 
 class UserCreate(BaseModel):
     name: str
     password: str
     email: str
-    role: UserRole.customer
+    role: UserRole = UserRole.customer
 
 class UserPublic(BaseModel):
     name: str

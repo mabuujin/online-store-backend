@@ -8,7 +8,7 @@ import jwt
 import os
 from dotenv import load_dotenv
 from pydantic import BaseModel
-from models import UserRole
+from app.models import UserRole
 
 load_dotenv()
 
@@ -23,14 +23,15 @@ class Token(BaseModel):
 
 
 class TokenData(BaseModel):
-    username: str
+    sub: str
     role: UserRole
 
 
 def authenticate_user(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], user):
     if not user:
         return False
-    if not bcrypt.checkpw(form_data.password, user.password_hash):
+    pw = user.password_hash
+    if not bcrypt.checkpw(form_data.password.encode("utf-8"), pw.encode("utf-8")):
         return False
     return True
 
@@ -38,7 +39,7 @@ def authenticate_user(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]
 def create_access_token(data: dict, expires_delta: timedelta):
     to_encode = data.copy()
     expire_date = datetime.now(timezone.utc) + expires_delta
-    to_encode.update({"expire": expire_date})
+    to_encode.update({"exp": expire_date})
     
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=HASHING_ALGORITHM)
     return encoded_jwt
@@ -46,5 +47,5 @@ def create_access_token(data: dict, expires_delta: timedelta):
 
 def get_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], user):
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = create_access_token(data={"username": user.name, "role": user.role}, expires_delta=access_token_expires)
+    access_token = create_access_token(data={"sub": user.name, "role": user.role}, expires_delta=access_token_expires)
     return Token(access_token=access_token, token_type="bearer")
